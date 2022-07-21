@@ -3,7 +3,15 @@ import axios from "axios";
 import "./Weather.css";
 
 export default function Weather() {
-  let [weatherData, setWeatherData] = useState({});
+  let [weatherData, setWeatherData] = useState({
+    city: "Kyiv",
+    date: "Wednesday 10:49, 29 Jun 2022",
+    temperature: 25,
+    description: "clear sky",
+    humidity: 80,
+    wind: 3,
+    icon: "fa-solid fa-sun"
+  });
   let [city, setCity] = useState("");
 
   function updateCity(event) {
