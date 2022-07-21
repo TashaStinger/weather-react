@@ -1,0 +1,123 @@
+.app-content {
+    max-width: 600px;
+    min-width: 255px;
+    background: white;
+    border-radius: 10px;
+    margin: 16px auto;
+    display: block;
+    padding: 24px;
+}
+
+/* ----- Buttons ----- */
+
+.search-button {
+    width: 100%;
+    color: white;
+    background: #005689;
+    font-weight: bold;
+    border: 1px solid #005689;
+}
+
+.search-button:hover,
+.search-button:active,
+.search-button:focus {
+    color: #005689;
+    background: #d5eeff;
+}
+
+/* ----- Current city weather ----- */
+
+.current-date {
+    margin-bottom: 16px;
+}
+
+.current {
+    margin: 16px 0 8px;
+    text-align: center;
+}
+
+.current-text {
+    font-size: 36px;
+    text-align: left;
+    /* font-weight: bold; */
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+}
+
+.current-text h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.weather {
+    font-size: 14px;
+    list-style: none;
+    padding: 5px 0 0;
+    color: #005689;
+    font-style: italic;
+    /* opacity: 95%; */
+}
+
+.weather-description {
+    font-weight: bold;
+}
+
+.weather-description::first-letter {
+    text-transform: capitalize;
+}
+
+.current-icon {
+    font-size: 72px;
+    color: #005689;
+}
+
+/* ----- Degrees ----- */
+
+.degrees {
+    vertical-align: super;
+    font-size: 14px;
+}
+
+.degrees a {
+    text-decoration: none;
+    color: #005689;
+    transition: all 70ms ease-in-out;
+}
+
+.degrees a:hover {
+    color: #1a8dc6;
+}
+
+.degrees a:active {
+    color: #1a8dc6;
+    font-size: larger;
+}
+
+/* ----- Forecast ----- */
+
+.week {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.week-icon {
+    font-size: 24px;
+    margin: 0px auto 4px;
+    color: #005689;
+}
+
+/* ----- Footer ----- */
+
+.footer {
+    text-align: center;
+    padding-top: 24px;
+    font-size: 12px;
+}
+
+.footer a {
+    color: #005689;
+}
+
+.footer a:hover {
+    color: #1a8dc6;
+}
