@@ -120,6 +120,9 @@ export default function Weather() {
               <div className="col-sm"></div>
             </div>
           </div>
+          <div className="footer">
+            <a href="https://github.com/TashaStinger/weather-react" target="_blank">Open-source code</a>, by Natalia Chaplia
+          </div>
         </div>
       </div>
     </div>
