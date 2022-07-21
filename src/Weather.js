@@ -33,7 +33,7 @@ export default function Weather() {
   }
 
   function showWeather(response) {
-    console.log(response.data);
+    // console.log(response.data);
     setWeatherData({
       city: response.data.name,
       date: "Wednesday 10:49, 29 Jun 2022",
@@ -43,8 +43,7 @@ export default function Weather() {
       wind: Math.round(response.data.wind.speed),
       icon: "fa-solid fa-sun"
     });
-      console.log(weatherData);
-    
+      // console.log(weatherData);
   }
 
   return (
@@ -121,7 +120,7 @@ export default function Weather() {
             </div>
           </div>
           <div className="footer">
-            <a href="https://github.com/TashaStinger/weather-react" target="_blank">Open-source code</a>, by Natalia Chaplia
+            <a href="https://github.com/TashaStinger/weather-react" title="GitHub" target="_blank">Open-source code</a>, by Natalia Chaplia
           </div>
         </div>
       </div>
