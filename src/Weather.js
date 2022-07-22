@@ -3,6 +3,8 @@ import axios from "axios";
 import "./Weather.css";
 
 export default function Weather() {
+  let Days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  let Months = ["Jan", "Fab", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   let [weatherData, setWeatherData] = useState({
     city: "Kyiv",
     date: "Wednesday 10:49, 29 Jun 2022",
@@ -14,6 +16,37 @@ export default function Weather() {
   });
   let [city, setCity] = useState("");
 
+  function formatTime(time){
+    if (time < 10) {
+      time = "0"+time;
+    }
+    return time;
+  }
+
+  function getIcon(weatherDescription) {
+    let weatherIcons = {
+        Drizzle: "fa-solid fa-cloud-rain",
+        Rain: "fa-solid fa-cloud-showers-heavy",
+        Snow: "fa-solid fa-snowflake",
+        Clear: "fa-solid fa-sun",
+        Clouds: "fa-solid fa-cloud-sun",
+
+        Smoke: "fa-solid fa-smog",
+        Haze: "fa-solid fa-smog",
+        Dust: "fa-solid fa-smog",
+        Fog: "fa-solid fa-smog",
+        Sand: "fa-solid fa-smog",
+        Ash: "fa-solid fa-smog",
+
+        Squall: "fa-solid fa-wind",
+        Tornado: "fa-solid fa-tornado"   
+    }
+    if (weatherDescription in weatherIcons) {
+      return weatherIcons[weatherDescription];
+    }
+    else return "";
+  }
+  
   function updateCity(event) {
     setCity(event.target.value);
   }
@@ -33,23 +66,27 @@ export default function Weather() {
   }
 
   function showWeather(response) {
-    // console.log(response.data);
+    console.log(response.data);
+    let currentDate = new Date(response.data.dt * 1000);
+    let dateString = `${Days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
+                      ${currentDate.getDate()} ${Months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+
     setWeatherData({
       city: response.data.name,
-      date: "Wednesday 10:49, 29 Jun 2022",
+      date: dateString,
       temperature: Math.round(response.data.main.temp),
       description: response.data.weather[0].description,
       humidity: response.data.main.humidity,
       wind: Math.round(response.data.wind.speed),
-      icon: "fa-solid fa-sun"
+      icon: getIcon(response.data.weather[0].main)
     });
-      // console.log(weatherData);
   }
 
   return (
     <div className="Weather">
       <div className="container">
         <div className="app-content">
+
           {/* <!-- Change city form --> */}
           <form onSubmit={searchWeather}>
             <div className="row">
@@ -63,23 +100,14 @@ export default function Weather() {
                   onChange={updateCity}
                 />
               </div>
+
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col">
-                    <button
-                      type="submit"
-                      className="btn btn-primary search-button"
-                    >
-                      Search
-                    </button>
+                    <button type="submit" className="btn btn-primary search-button">Search</button>
                   </div>
                   <div className="col">
-                    <button
-                      type="submit"
-                      className="btn btn-primary search-button"
-                    >
-                      Your city
-                    </button>
+                    <button type="submit" className="btn btn-primary search-button">Your city</button>
                   </div>
                 </div>
               </div>
@@ -114,11 +142,12 @@ export default function Weather() {
 
               {/* <!-- Current icon --> */}
               <div className="col p-0 current-icon">
-                <i className={weatherData.icon}></i>
+                <i className ={weatherData.icon}></i>
               </div>
               <div className="col-sm"></div>
             </div>
           </div>
+
           <div className="footer">
             <a href="https://github.com/TashaStinger/weather-react" title="GitHub" rel="noreferrer" target="_blank">Open-source code</a>, by Natalia Chaplia
           </div>
