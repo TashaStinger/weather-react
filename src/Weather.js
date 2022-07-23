@@ -2,19 +2,21 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Weather.css";
 
+let count = 0;
+
 export default function Weather() {
   let Days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   let Months = ["Jan", "Fab", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  let [weatherData, setWeatherData] = useState({
-    // city: "Kyiv",
-    // date: "Wednesday 10:49, 29 Jun 2022",
-    // temperature: 25,
-    // description: "clear sky",
-    // humidity: 80,
-    // wind: 3,
-    // icon: "fa-solid fa-sun"
+  let[weatherData, setWeatherData] = useState({
+    // city: "",
+    // date: "",
+    // temperature: null,
+    // description: "",
+    // humidity: null,
+    // wind: null,
+    // icon: ""
   });
-  let [city, setCity] = useState("New York");
+  const [city, setCity] = useState("New York");
 
   function formatTime(time){
     if (time < 10) {
@@ -31,6 +33,7 @@ export default function Weather() {
         Clear: "fa-solid fa-sun",
         Clouds: "fa-solid fa-cloud-sun",
 
+        Mist: "fa-solid fa-smog",
         Smoke: "fa-solid fa-smog",
         Haze: "fa-solid fa-smog",
         Dust: "fa-solid fa-smog",
@@ -51,32 +54,33 @@ export default function Weather() {
     setCity(event.target.value);
   }
 
-  // function searchWeatherByCity(){
-  //   city = city.trim();
-  //   if (city === "") {
-  //     alert("Type a city");
-  //   } else {
-  //     let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
-  //     let units = "metric";
-  //     let ApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&appid=${apiKey}`;
+  function searchWeatherByCity(cityName){
+    cityName = cityName.trim();
+    if (cityName === "") {
+      alert("Type a city");
+    } else 
+    {
+      // let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
+      // let units = "metric";
+      // let ApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=${units}&appid=${apiKey}`;
 
-  //     axios.get(ApiUrl).then(showWeather);
-  // }
+      let currentDate = new Date();
+      let dateString = `${Days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
+                      ${currentDate.getDate()} ${Months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+      setWeatherData({
+        city: cityName,
+        date: dateString
+      });
+      count++;
+      console.log(count);
+      alert(`Search weather for ${cityName}`);
+      // axios.get(ApiUrl).then(showWeather);
+    }
+  }
 
   function searchWeather(event) {
     event.preventDefault();
-    // searchWeatherByCity();
-
-    city = city.trim();
-    if (city === "") {
-      alert("Type a city");
-    } else {
-      let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
-      let units = "metric";
-      let ApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&appid=${apiKey}`;
-
-      axios.get(ApiUrl).then(showWeather);
-    }
+    searchWeatherByCity(city);
   }
 
   function showWeather(response) {
@@ -95,8 +99,11 @@ export default function Weather() {
       icon: getIcon(response.data.weather[0].main)
     });
   }
-
-
+// debugger;
+  if (weatherData.city === undefined){
+    searchWeatherByCity(city);
+  }
+  console.log(weatherData);
 
   return (
     <div className="Weather">
