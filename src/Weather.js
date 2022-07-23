@@ -6,15 +6,15 @@ export default function Weather() {
   let Days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   let Months = ["Jan", "Fab", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   let [weatherData, setWeatherData] = useState({
-    city: "Kyiv",
-    date: "Wednesday 10:49, 29 Jun 2022",
-    temperature: 25,
-    description: "clear sky",
-    humidity: 80,
-    wind: 3,
-    icon: "fa-solid fa-sun"
+    // city: "Kyiv",
+    // date: "Wednesday 10:49, 29 Jun 2022",
+    // temperature: 25,
+    // description: "clear sky",
+    // humidity: 80,
+    // wind: 3,
+    // icon: "fa-solid fa-sun"
   });
-  let [city, setCity] = useState("");
+  let [city, setCity] = useState("New York");
 
   function formatTime(time){
     if (time < 10) {
@@ -51,8 +51,22 @@ export default function Weather() {
     setCity(event.target.value);
   }
 
+  // function searchWeatherByCity(){
+  //   city = city.trim();
+  //   if (city === "") {
+  //     alert("Type a city");
+  //   } else {
+  //     let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
+  //     let units = "metric";
+  //     let ApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&appid=${apiKey}`;
+
+  //     axios.get(ApiUrl).then(showWeather);
+  // }
+
   function searchWeather(event) {
     event.preventDefault();
+    // searchWeatherByCity();
+
     city = city.trim();
     if (city === "") {
       alert("Type a city");
@@ -81,6 +95,8 @@ export default function Weather() {
       icon: getIcon(response.data.weather[0].main)
     });
   }
+
+
 
   return (
     <div className="Weather">
@@ -149,7 +165,9 @@ export default function Weather() {
           </div>
 
           <div className="footer">
-            <a href="https://github.com/TashaStinger/weather-react" title="GitHub" rel="noreferrer" target="_blank">Open-source code</a>, by Natalia Chaplia
+            <a href="https://github.com/TashaStinger/weather-react" title="GitHub" rel="noreferrer" target="_blank">
+              Open-source code
+            </a>, by Natalia Chaplia
           </div>
         </div>
       </div>
