@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Weather.css";
 
-let count = 0;
+let countSearchWeatherByCity = 0;
+let countShowWeather = 0;
 
 export default function Weather() {
   let Days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -60,21 +61,21 @@ export default function Weather() {
       alert("Type a city");
     } else 
     {
-      // let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
-      // let units = "metric";
-      // let ApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=${units}&appid=${apiKey}`;
+      let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
+      let units = "metric";
+      let ApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=${units}&appid=${apiKey}`;
 
-      let currentDate = new Date();
-      let dateString = `${Days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
-                      ${currentDate.getDate()} ${Months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
-      setWeatherData({
-        city: cityName,
-        date: dateString
-      });
-      count++;
-      console.log(count);
+      // let currentDate = new Date();
+      // let dateString = `${Days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
+      //                 ${currentDate.getDate()} ${Months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+      // setWeatherData({
+      //   city: cityName,
+      //   date: dateString
+      // });
+      countSearchWeatherByCity++;
       alert(`Search weather for ${cityName}`);
-      // axios.get(ApiUrl).then(showWeather);
+      console.log(`Call API - ${countSearchWeatherByCity}`);
+      axios.get(ApiUrl).then(showWeather);
     }
   }
 
@@ -84,6 +85,8 @@ export default function Weather() {
   }
 
   function showWeather(response) {
+    countShowWeather++;
+    console.log(`Show Weather - ${countShowWeather}`);
     console.log(response.data);
     let currentDate = new Date(response.data.dt * 1000);
     let dateString = `${Days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
@@ -100,7 +103,7 @@ export default function Weather() {
     });
   }
 // debugger;
-  if (weatherData.city === undefined){
+  if (weatherData.city === undefined && countSearchWeatherByCity <2){
     searchWeatherByCity(city);
   }
   console.log(weatherData);
