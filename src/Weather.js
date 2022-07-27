@@ -3,13 +3,16 @@ import axios from "axios";
 import "./Weather.css";
 
 let count = 0;
+let countForecast = 0;
 let countShowWeather = 0;
 
 export default function Weather() {
-  let Days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  let Months = ["Jan", "Fab", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  let months = ["Jan", "Fab", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
   let units = "metric";
+  // let countForecastDays = 5;
+
   let[weatherData, setWeatherData] = useState({
     // city: "",
     // date: "",
@@ -20,12 +23,19 @@ export default function Weather() {
     // icon: ""
   });
   const [city, setCity] = useState("New York");
+  const [forecastData, setForecastData] = useState([]);
 
   function formatTime(time){
     if (time < 10) {
-      time = "0"+time;
+      time = "0" + time;
     }
     return time;
+  }
+
+  function formatForecastDay(timestamp) {
+    let date = new Date(timestamp * 1000);
+    let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return days[date.getDay()];
   }
 
   function getIcon(weatherDescription) {
@@ -57,13 +67,74 @@ export default function Weather() {
     setCity(event.target.value);
   }
 
+  function displayForecastDay(day){
+    return (
+          <div className="col p-0">
+            <h6>{formatForecastDay(day.dt)}</h6>
+            <div className="week-icon"><i className = {getIcon(day.weather[0].main)}></i></div>
+            <div className="min-temp">{Math.round(day.temp.min)}°</div>
+            <div className="max-temp">{Math.round(day.temp.max)}°</div>
+          </div>
+    )
+    
+  }
+
+  function displayForecast() {
+    // let forecastHTML = `<div className="row">`;
+    // forecastData.forEach(function(day, index) {
+    //   if (index < countForecastDays) {
+    //     displayForecastDay(forecastData[index], index);
+    //     // forecastHTML += `
+    //     //   <div className="col p-0">
+    //     //     <h6>${formatForecastDay(day.dt)}</h6>
+    //     //     <div className="week-icon"><i class = ${getIcon(day.weather[0].main)}</i></div>
+    //     //     <div id="day-${index}-min-temp">${Math.round(day.temp.min)}°</div>
+    //     //     <div id="day-${index}-max-temp">${Math.round(day.temp.max)}°</div>
+    //     //   </div>`;
+    //     // weekTemperature.celsiusMin[index] = Math.round(day.temp.min);
+    //     // weekTemperature.celsiusMax[index] = Math.round(day.temp.max); 
+    //     // weekTemperature.fahrenheitMin[index] = Math.round(weekTemperature.celsiusMin[index] * 1.8 + 32);
+    //     // weekTemperature.fahrenheitMax[index] = Math.round(weekTemperature.celsiusMax[index] * 1.8 + 32);
+    //   }
+    // })
+    if (forecastData[0] !== undefined) {
+      return (
+        <div className="forecast">
+          <div className="row">
+            {displayForecastDay(forecastData[0])}
+            {displayForecastDay(forecastData[1])}
+            {displayForecastDay(forecastData[2])}
+            {displayForecastDay(forecastData[3])}
+            {displayForecastDay(forecastData[4])}
+          </div>
+        </div>
+      )
+    }
+  }
+
+  function showForecast(response) {
+    console.log(response.data.daily);
+    let forecast = response.data.daily;
+
+    setForecastData(forecast);
+    // console.log(forecastHTML);
+  }
+
+  function getForecast (latitude, longitude) {
+    let forecastApiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&exclude=hourly,minutely&appid=${apiKey}`;
+    countForecast++;
+    console.log(`Forecast API - ${countForecast}`);
+    axios.get(forecastApiUrl).then(showForecast);
+  }
+
   function showWeather(response) {
     countShowWeather++;
     console.log(`Show Weather - ${countShowWeather}`);
     console.log(response.data);
+
     let currentDate = new Date(response.data.dt * 1000);
-    let dateString = `${Days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
-                      ${currentDate.getDate()} ${Months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+    let dateString = `${days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
+                      ${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
 
     setWeatherData({
       city: response.data.name,
@@ -74,6 +145,8 @@ export default function Weather() {
       wind: Math.round(response.data.wind.speed),
       icon: getIcon(response.data.weather[0].main)
     });
+
+    getForecast(response.data.coord.lat, response.data.coord.lon);
   }
 
   function getWeather(url) {
@@ -82,7 +155,7 @@ export default function Weather() {
     axios.get(url).then(showWeather);
   }
 
-  function searchWeatherByCity(cityName){
+  function weatherByCity(cityName){
     cityName = cityName.trim();
     if (cityName === "") {
       alert("Type a city");
@@ -97,7 +170,7 @@ export default function Weather() {
 
   function searchWeather(event) {
     event.preventDefault();
-    searchWeatherByCity(city);
+    weatherByCity(city);
   }
 
   function createPositionApiUrl(position) {
@@ -115,7 +188,8 @@ function weatherByPosition(event) {
 
 // debugger;
   if (weatherData.city === undefined && count <2){
-    searchWeatherByCity(city);
+    weatherByCity(city);
+    
   }
   console.log(weatherData);
 
@@ -184,6 +258,8 @@ function weatherByPosition(event) {
               <div className="col-sm"></div>
             </div>
           </div>
+
+          {displayForecast()}
 
           <div className="footer">
             <a href="https://github.com/TashaStinger/weather-react" title="GitHub" rel="noreferrer" target="_blank">
