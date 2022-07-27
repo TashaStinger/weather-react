@@ -75,8 +75,7 @@ export default function Weather() {
             <div className="min-temp">{Math.round(day.temp.min)}°</div>
             <div className="max-temp">{Math.round(day.temp.max)}°</div>
           </div>
-    )
-    
+    )   
   }
 
   function displayForecast() {
@@ -99,7 +98,7 @@ export default function Weather() {
     // })
     if (forecastData[0] !== undefined) {
       return (
-        <div className="forecast">
+        <div className="week">
           <div className="row">
             {displayForecastDay(forecastData[0])}
             {displayForecastDay(forecastData[1])}
