@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Weather.css";
 
-let countSearchWeatherByCity = 0;
+let count = 0;
 let countShowWeather = 0;
 
 export default function Weather() {
   let Days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   let Months = ["Jan", "Fab", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
+  let units = "metric";
   let[weatherData, setWeatherData] = useState({
     // city: "",
     // date: "",
@@ -55,35 +57,6 @@ export default function Weather() {
     setCity(event.target.value);
   }
 
-  function searchWeatherByCity(cityName){
-    cityName = cityName.trim();
-    if (cityName === "") {
-      alert("Type a city");
-    } else 
-    {
-      let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
-      let units = "metric";
-      let ApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=${units}&appid=${apiKey}`;
-
-      // let currentDate = new Date();
-      // let dateString = `${Days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
-      //                 ${currentDate.getDate()} ${Months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
-      // setWeatherData({
-      //   city: cityName,
-      //   date: dateString
-      // });
-      countSearchWeatherByCity++;
-      alert(`Search weather for ${cityName}`);
-      console.log(`Call API - ${countSearchWeatherByCity}`);
-      axios.get(ApiUrl).then(showWeather);
-    }
-  }
-
-  function searchWeather(event) {
-    event.preventDefault();
-    searchWeatherByCity(city);
-  }
-
   function showWeather(response) {
     countShowWeather++;
     console.log(`Show Weather - ${countShowWeather}`);
@@ -102,8 +75,46 @@ export default function Weather() {
       icon: getIcon(response.data.weather[0].main)
     });
   }
+
+  function getWeather(url) {
+    count++;
+    console.log(`Call API - ${count}`);
+    axios.get(url).then(showWeather);
+  }
+
+  function searchWeatherByCity(cityName){
+    cityName = cityName.trim();
+    if (cityName === "") {
+      alert("Type a city");
+    } else 
+    {
+      let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=${units}&appid=${apiKey}`;
+
+      alert(`Search weather for ${cityName}`);
+      getWeather(apiUrl);
+    }
+  }
+
+  function searchWeather(event) {
+    event.preventDefault();
+    searchWeatherByCity(city);
+  }
+
+  function createPositionApiUrl(position) {
+    let latitude = position.coords.latitude;
+    let longitude = position.coords.longitude;
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`;
+    alert(`Search weather for your current city`);
+    getWeather(apiUrl);
+  }
+
+function weatherByPosition(event) {
+  event.preventDefault();
+  navigator.geolocation.getCurrentPosition(createPositionApiUrl);
+}
+
 // debugger;
-  if (weatherData.city === undefined && countSearchWeatherByCity <2){
+  if (weatherData.city === undefined && count <2){
     searchWeatherByCity(city);
   }
   console.log(weatherData);
@@ -133,7 +144,7 @@ export default function Weather() {
                     <button type="submit" className="btn btn-primary search-button">Search</button>
                   </div>
                   <div className="col">
-                    <button type="submit" className="btn btn-primary search-button">Your city</button>
+                    <button type="submit" className="btn btn-primary search-button" onClick={weatherByPosition}>Your city</button>
                   </div>
                 </div>
               </div>
