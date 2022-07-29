@@ -13,7 +13,8 @@ export default function Weather() {
   let units = "metric";
   // let countForecastDays = 5;
 
-  let[weatherData, setWeatherData] = useState({
+  const [weatherData, setWeatherData] = useState({
+    ready: false
     // city: "",
     // date: "",
     // temperature: null,
@@ -24,6 +25,7 @@ export default function Weather() {
   });
   const [city, setCity] = useState("New York");
   const [forecastData, setForecastData] = useState([]);
+  // const [fahrenheit, setFahrenheit] = useState(false);
 
   function formatTime(time){
     if (time < 10) {
@@ -97,6 +99,7 @@ export default function Weather() {
     //   }
     // })
     if (forecastData[0] !== undefined) {
+      console.log("displayForecast");
       return (
         <div className="week">
           <div className="row">
@@ -114,9 +117,8 @@ export default function Weather() {
   function showForecast(response) {
     console.log(response.data.daily);
     let forecast = response.data.daily;
-
+    console.log("showForecast - setForecastData");
     setForecastData(forecast);
-    // console.log(forecastHTML);
   }
 
   function getForecast (latitude, longitude) {
@@ -128,14 +130,15 @@ export default function Weather() {
 
   function showWeather(response) {
     countShowWeather++;
-    console.log(`Show Weather - ${countShowWeather}`);
     console.log(response.data);
+    console.log(`Show Weather - ${countShowWeather}`);
 
     let currentDate = new Date(response.data.dt * 1000);
     let dateString = `${days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
                       ${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
 
     setWeatherData({
+      ready: true,
       city: response.data.name,
       date: dateString,
       temperature: Math.round(response.data.main.temp),
@@ -158,8 +161,8 @@ export default function Weather() {
     cityName = cityName.trim();
     if (cityName === "") {
       alert("Type a city");
-    } else 
-    {
+    } 
+    else {
       let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=${units}&appid=${apiKey}`;
 
       alert(`Search weather for ${cityName}`);
@@ -185,88 +188,109 @@ function weatherByPosition(event) {
   navigator.geolocation.getCurrentPosition(createPositionApiUrl);
 }
 
-// debugger;
-  if (weatherData.city === undefined && count <2){
-    weatherByCity(city);
+// function changeToFahrenheit(event) {
+//   event.preventDefault();
+//   // setFahrenheit(true);
+// }
+
+// function showDegrees() {
+//   return (
+//       <span className="degrees">
+//         <a href="/" active="true">°C</a> | <a href="/" onClick={changeToFahrenheit} active="false">°F</a>
+//       </span>
+//   )
+// }
+
+
+  // if (weatherData.city === undefined && count <2){
+  //   weatherByCity(city);
     
-  }
-  console.log(weatherData);
+  // }
 
-  return (
-    <div className="Weather">
-      <div className="container">
-        <div className="app-content">
+  if (weatherData.ready) {
+    console.log("render");
+    return (
+      <div className="Weather">
+        <div className="container">
+          <div className="app-content">
 
-          {/* <!-- Change city form --> */}
-          <form onSubmit={searchWeather}>
-            <div className="row">
-              <div className="col-sm mb-2">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Enter a city..."
-                  autoFocus="on"
-                  autoComplete="off"
-                  onChange={updateCity}
-                />
-              </div>
+            {/* <!-- Change city form --> */}
+            <form onSubmit={searchWeather}>
+              <div className="row">
+                <div className="col-sm mb-2">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Enter a city..."
+                    autoFocus="on"
+                    autoComplete="off"
+                    onChange={updateCity}
+                  />
+                </div>
 
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col">
-                    <button type="submit" className="btn btn-primary search-button">Search</button>
-                  </div>
-                  <div className="col">
-                    <button type="submit" className="btn btn-primary search-button" onClick={weatherByPosition}>Your city</button>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col">
+                      <button type="submit" className="btn btn-primary search-button">Search</button>
+                    </div>
+                    <div className="col">
+                      <button type="submit" className="btn btn-primary search-button" onClick={weatherByPosition}>Your city</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </form>
+            </form>
 
-          {/* <!-- Current date and weather in the current city --> */}
-          <div className="current">
-            <div className="row">
-              <div className="col current-date">{weatherData.date}</div>
-            </div>
-
-            <div className="row d-flex align-items-center">
-              <div className="col-sm-1"></div>
-              <div className="col-1"></div>
-
-              {/* <!-- Current city with weather --> */}
-              <div className="col-6 p-0 current-text">
-                <h1>{weatherData.city}</h1>
-                <span>{weatherData.temperature}</span>
-                <span className="degrees">
-                  <a href="/">°C</a> | <a href="/">°F</a>
-                </span>
-                <ul className="weather">
-                  <li className="weather-description">
-                    {weatherData.description}
-                  </li>
-                  <li>humidity - {weatherData.humidity}%</li>
-                  <li>wind - {weatherData.wind} m/s</li>
-                </ul>
+            {/* <!-- Current date and weather in the current city --> */}
+            <div className="current">
+              <div className="row">
+                <div className="col current-date">{weatherData.date}</div>
               </div>
 
-              {/* <!-- Current icon --> */}
-              <div className="col p-0 current-icon">
-                <i className ={weatherData.icon}></i>
+              <div className="row d-flex align-items-center">
+                <div className="col-sm-1"></div>
+                <div className="col-1"></div>
+
+                {/* <!-- Current city with weather --> */}
+                <div className="col-6 p-0 current-text">
+                  <h1>{weatherData.city}</h1>
+                  <span>{weatherData.temperature}</span>
+                  <span className="degrees">
+                    <a href="/">°C</a> | <a href="/">°F</a>
+                  </span>
+                  {/* {showDegrees()} */}
+                  <ul className="weather">
+                    <li className="weather-description">
+                      {weatherData.description}
+                    </li>
+                    <li>humidity - {weatherData.humidity}%</li>
+                    <li>wind - {weatherData.wind} m/s</li>
+                  </ul>
+                </div>
+
+                {/* <!-- Current icon --> */}
+                <div className="col p-0 current-icon">
+                  <i className ={weatherData.icon}></i>
+                </div>
+                <div className="col-sm"></div>
               </div>
-              <div className="col-sm"></div>
             </div>
-          </div>
 
-          {displayForecast()}
+            {displayForecast()}
 
-          <div className="footer">
-            <a href="https://github.com/TashaStinger/weather-react" title="GitHub" rel="noreferrer" target="_blank">
-              Open-source code
-            </a>, by Natalia Chaplia
+            <div className="footer">
+              <a href="https://github.com/TashaStinger/weather-react" title="GitHub" rel="noreferrer" target="_blank">
+                Open-source code
+              </a>, by Natalia Chaplia
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+  else {
+    weatherByCity(city);
+    return "Loading...";
+  }
+ 
 }
