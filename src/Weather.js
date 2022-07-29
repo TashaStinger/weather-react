@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Weather.css";
+import FormattedDate from "./FormattedDate";
 
 let count = 0;
 let countForecast = 0;
 let countShowWeather = 0;
 
 export default function Weather() {
-  let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  let months = ["Jan", "Fab", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  // let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  // let months = ["Jan", "Fab", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
   let units = "metric";
   // let countForecastDays = 5;
@@ -133,14 +134,14 @@ export default function Weather() {
     console.log(response.data);
     console.log(`Show Weather - ${countShowWeather}`);
 
-    let currentDate = new Date(response.data.dt * 1000);
-    let dateString = `${days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
-                      ${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+    // let currentDate = new Date(response.data.dt * 1000);
+    // let dateString = `${days[currentDate.getDay()]} ${formatTime(currentDate.getHours())}:${formatTime(currentDate.getMinutes())}, 
+    //                   ${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
 
     setWeatherData({
       ready: true,
       city: response.data.name,
-      date: dateString,
+      date: new Date(response.data.dt * 1000),
       temperature: Math.round(response.data.main.temp),
       description: response.data.weather[0].description,
       humidity: response.data.main.humidity,
@@ -201,7 +202,6 @@ function weatherByPosition(event) {
 //   )
 // }
 
-
   // if (weatherData.city === undefined && count <2){
   //   weatherByCity(city);
     
@@ -244,7 +244,10 @@ function weatherByPosition(event) {
             {/* <!-- Current date and weather in the current city --> */}
             <div className="current">
               <div className="row">
-                <div className="col current-date">{weatherData.date}</div>
+                <div className="col current-date">
+                  {/* {weatherData.date} */}
+                  <FormattedDate date={weatherData.date} />
+                  </div>
               </div>
 
               <div className="row d-flex align-items-center">
