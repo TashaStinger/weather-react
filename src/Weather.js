@@ -28,12 +28,12 @@ export default function Weather() {
   const [forecastData, setForecastData] = useState([]);
   // const [fahrenheit, setFahrenheit] = useState(false);
 
-  function formatTime(time){
-    if (time < 10) {
-      time = "0" + time;
-    }
-    return time;
-  }
+  // function formatTime(time){
+  //   if (time < 10) {
+  //     time = "0" + time;
+  //   }
+  //   return time;
+  // }
 
   function formatForecastDay(timestamp) {
     let date = new Date(timestamp * 1000);
