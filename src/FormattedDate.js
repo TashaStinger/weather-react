@@ -12,8 +12,7 @@ export default function FormattedDate(props) {
   }
 
   let dateString = `${days[props.date.getDay()]} ${formatTime(props.date.getHours())}:${formatTime(props.date.getMinutes())}, ${props.date.getDate()} ${months[props.date.getMonth()]} ${props.date.getFullYear()}`;
-
-  console.log(dateString);
+  // console.log(dateString);
   return (
     <div className="FormattedDate">
       {dateString}
