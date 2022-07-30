@@ -2,73 +2,20 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Weather.css";
 import CurrentWeather from "./CurrentWeather";
-import WeatherIcon from "./WeatherIcon";
+import Forecast from "./Forecast";
 
 let count = 0;
-let countForecast = 0;
 let countShowWeather = 0;
 
 export default function Weather() {
   let apiKey = "f7d5a287feccc9d05c7badbf5cac779d";
   let units = "metric";
-  // let countForecastDays = 5;
 
   const [weatherData, setWeatherData] = useState({ready: false});
   const [city, setCity] = useState("New York");
-  const [forecastData, setForecastData] = useState([]);
 
    function updateCity(event) {
     setCity(event.target.value);
-  }
-
-  function formatForecastDay(timestamp) {
-    let date = new Date(timestamp * 1000);
-    let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    return days[date.getDay()];
-  }
-
-  function displayForecastDay(day){
-    return (
-      <div className="col p-0">
-        <h6>{formatForecastDay(day.dt)}</h6>
-        <div className="week-icon">
-          <WeatherIcon description={day.weather[0].main} />
-        </div>
-        <div className="min-temp">{Math.round(day.temp.min)}°</div>
-        <div className="max-temp">{Math.round(day.temp.max)}°</div>
-      </div>
-    )   
-  }
-
-  function displayForecast() {
-    if (forecastData[0] !== undefined) {
-      console.log("displayForecast");
-      return (
-        <div className="week">
-          <div className="row">
-            {displayForecastDay(forecastData[0])}
-            {displayForecastDay(forecastData[1])}
-            {displayForecastDay(forecastData[2])}
-            {displayForecastDay(forecastData[3])}
-            {displayForecastDay(forecastData[4])}
-          </div>
-        </div>
-      )
-    }
-  }
-
-  function showForecast(response) {
-    console.log(response.data.daily);
-    let forecast = response.data.daily;
-    console.log("setForecastData");
-    setForecastData(forecast);
-  }
-
-  function getForecast (latitude, longitude) {
-    let forecastApiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&exclude=hourly,minutely&appid=${apiKey}`;
-    countForecast++;
-    console.log(`Forecast API - ${countForecast}`);
-    axios.get(forecastApiUrl).then(showForecast);
   }
 
   function showWeather(response) {
@@ -78,6 +25,7 @@ export default function Weather() {
 
     setWeatherData({
       ready: true,
+      coordinates: response.data.coord,
       city: response.data.name,
       date: new Date(response.data.dt * 1000),
       temperature: Math.round(response.data.main.temp),
@@ -86,8 +34,6 @@ export default function Weather() {
       wind: Math.round(response.data.wind.speed),
       icon: response.data.weather[0].main
     });
-
-    getForecast(response.data.coord.lat, response.data.coord.lon);
   }
 
   function getWeather(url) {
@@ -162,8 +108,7 @@ function weatherByPosition(event) {
           </form>
 
           <CurrentWeather data={weatherData} />
-
-          {displayForecast()}
+          <Forecast coordinates={weatherData.coordinates}/>
 
           <div className="footer">
             <a href="https://github.com/TashaStinger/weather-react" title="GitHub" rel="noreferrer" target="_blank">
