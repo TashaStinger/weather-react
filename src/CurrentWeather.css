@@ -1,0 +1,43 @@
+.weather-description {
+    font-weight: bold;
+}
+
+.weather-description::first-letter {
+    text-transform: capitalize;
+}
+
+.current-icon {
+    font-size: 72px;
+    color: #005689;
+}
+
+.current-date {
+    margin-bottom: 16px;
+}
+
+.current {
+    margin: 16px 0 8px;
+    text-align: center;
+}
+
+.current-text {
+    font-size: 36px;
+    text-align: left;
+    /* font-weight: bold; */
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+}
+
+.current-text h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.weather {
+    font-size: 14px;
+    list-style: none;
+    padding: 5px 0 0;
+    color: #005689;
+    font-style: italic;
+    /* opacity: 95%; */
+}

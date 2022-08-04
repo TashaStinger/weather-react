@@ -1,0 +1,19 @@
+.degrees {
+    vertical-align: super;
+    font-size: 14px;
+}
+
+.degrees a {
+    text-decoration: none;
+    color: #005689;
+    transition: all 70ms ease-in-out;
+}
+
+.degrees a:hover {
+    color: #1a8dc6;
+}
+
+.degrees a:active {
+    color: #1a8dc6;
+    font-size: larger;
+}

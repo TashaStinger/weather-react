@@ -1,0 +1,14 @@
+.week {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.week h6 {
+    font-weight: 600;
+}
+
+.week-icon {
+    font-size: 24px;
+    margin: 0px auto 4px;
+    color: #005689;
+}
